@@ -43,7 +43,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:50',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
+            'role' => 'required|in:admin,veterinario,mantenimiento'
         ]);
 
         if($validator->fails())
@@ -54,10 +55,19 @@ class AuthController extends Controller
             ], 422);
         }
 
+        if($request->role === 'admin')
+        {
+            return response()->json([
+                "success" => false,
+                "message" => "No puedes registrate como admin"
+            ], 403);
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'role' => $request->role
         ]);
 
         $token = $user->createToken('LaravelSanctumAuth')->plainTextToken;
@@ -70,6 +80,16 @@ class AuthController extends Controller
                 "token" => $token
             ],
             "message" => "User registered!"
+        ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Logged out"
         ]);
     }
 }
