@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login - Jurassic Park</title>
+    <title>Register - Jurassic Park</title>
 
     <style>
         body {
@@ -28,7 +28,7 @@
             color: #facc15;
         }
 
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
@@ -42,7 +42,7 @@
             width: 100%;
             padding: 10px;
             margin-top: 15px;
-            background: #22c55e;
+            background: #facc15;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -60,24 +60,33 @@
 <body>
 
 <div class="box">
-    <h2>🦖 Login</h2>
+    <h2>🦖 Register</h2>
 
+    <input id="name" placeholder="Name">
     <input id="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
 
-    <button onclick="login()">Entrar</button>
+    <select id="role">
+        <option value="admin">Admin</option>
+        <option value="veterinario">Veterinario</option>
+        <option value="mantenimiento">Mantenimiento</option>
+    </select>
 
-    <div class="link" onclick="goRegister()">¿No tienes cuenta? Regístrate</div>
+    <button onclick="register()">Crear cuenta</button>
+
+    <div class="link" onclick="goLogin()">¿Ya tienes cuenta? Login</div>
 </div>
 
 <script>
-function login() {
-    fetch('/api/login', {
+function register() {
+    fetch('/api/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
+            name: name.value,
             email: email.value,
-            password: password.value
+            password: password.value,
+            role: role.value
         })
     })
     .then(res => res.json())
@@ -90,8 +99,8 @@ function login() {
     })
 }
 
-function goRegister() {
-    window.location.href = "/register"
+function goLogin() {
+    window.location.href = "/login"
 }
 </script>
 

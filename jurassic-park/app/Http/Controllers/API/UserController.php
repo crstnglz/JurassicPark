@@ -56,4 +56,36 @@ class UserController extends Controller
 
         return response()->json(["message" => "User deleted"]);
     }
+
+    //UPDATE USER
+    public function update($id, Request $request)
+    {
+        if(auth()->user()->role !== 'admin')
+        {
+            return response()->json(["error" => "Forbidden"], 403);
+        }
+
+        $user = User::find($id);
+
+        if(!$user)
+        {
+            return response()->json(["error" => "User not found"], 404);
+        }
+
+        $user->name = $request->name ?? $user->name;
+        $user->email = $request->email ?? $user->email;
+        $user->role = $request->role ?? $user->role;
+
+        if($request->password)
+        {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            "success" => true,
+            "user" => $user
+        ]);
+    }
 }

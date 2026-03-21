@@ -6,74 +6,108 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #020617, #0f172a);
-            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #052e16, #020617);
+            color: #e5e7eb;
         }
 
         .navbar {
-            background: #020617;
+            background: rgba(0,0,0,0.7);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            border-bottom: 2px solid #22c55e;
         }
 
         .logo {
+            color: #facc15;
             font-weight: bold;
-            font-size: 20px;
-            color: #22c55e;
         }
 
         .logout {
-            background: #ef4444;
-            border: none;
+            background: #dc2626;
             padding: 8px 12px;
-            border-radius: 8px;
+            border-radius: 6px;
+            border: none;
             color: white;
             cursor: pointer;
         }
 
         .container {
             padding: 40px;
-            text-align: center;
+            max-width: 900px;
+            margin: auto;
         }
 
         .card {
-            background: #111827;
+            background: rgba(0,0,0,0.6);
             padding: 25px;
-            border-radius: 12px;
-            max-width: 400px;
-            margin: auto;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 16px;
+            border: 1px solid #22c55e;
+            text-align: center;
         }
 
         .role {
             margin-top: 10px;
-            padding: 8px;
+            background: #064e3b;
+            padding: 10px;
             border-radius: 8px;
-            background: #1f2937;
         }
 
         .admin-panel {
-            margin-top: 30px;
+            margin-top: 40px;
             display: none;
         }
 
-        .admin-panel button {
-            margin: 5px;
+        h3 {
+            color: #facc15;
+        }
+
+        .user-card {
+            background: rgba(0,0,0,0.6);
+            border-left: 4px solid #22c55e;
             padding: 10px;
-            border: none;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
             border-radius: 8px;
-            background: #3b82f6;
-            color: white;
+        }
+
+        .actions button {
+            margin-left: 5px;
+            padding: 5px 8px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
 
-        .admin-panel button:hover {
-            background: #2563eb;
+        .edit { background: #facc15; color: black; }
+        .delete { background: #dc2626; color: white; }
+
+        .load { background: #22c55e; padding: 8px; margin-top: 10px; }
+        .create { background: #facc15; padding: 10px; margin-top: 10px; }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            background: #020617;
+            border: 1px solid #14532d;
+            color: white;
+            border-radius: 6px;
         }
+
+        .edit-box {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid #facc15;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .save { background: #22c55e; margin-top: 10px; }
+        .cancel { background: #dc2626; margin-top: 5px; }
     </style>
 </head>
 
@@ -85,17 +119,52 @@
 </div>
 
 <div class="container">
+
     <div class="card">
         <h2 id="welcome"></h2>
         <div class="role" id="role"></div>
     </div>
 
     <div class="admin-panel" id="adminPanel">
-        <h3>🔥 Panel de Administrador</h3>
-        <button onclick="alert('Aquí irá GET /users')">Ver usuarios</button>
-        <button onclick="alert('Aquí irá POST /users')">Crear usuario</button>
-        <button onclick="alert('Aquí irá DELETE /users')">Eliminar usuario</button>
+
+        <h3>👥 Usuarios</h3>
+        <button class="load" onclick="getUsers()">Cargar usuarios</button>
+
+        <div id="usersList"></div>
+
+        <!-- 🔥 EDIT BOX -->
+        <div class="edit-box" id="editBox">
+            <h3>✏️ Editar usuario</h3>
+
+            <input id="editName" placeholder="Nombre">
+            <input id="editEmail" placeholder="Email">
+
+            <select id="editRole">
+                <option value="admin">Admin</option>
+                <option value="veterinario">Veterinario</option>
+                <option value="mantenimiento">Mantenimiento</option>
+            </select>
+
+            <button class="save" onclick="saveEdit()">Guardar</button>
+            <button class="cancel" onclick="cancelEdit()">Cancelar</button>
+        </div>
+
+        <h3>➕ Crear usuario</h3>
+
+        <input id="newName" placeholder="Nombre">
+        <input id="newEmail" placeholder="Email">
+        <input id="newPassword" placeholder="Password">
+
+        <select id="newRole">
+            <option value="admin">Admin</option>
+            <option value="veterinario">Veterinario</option>
+            <option value="mantenimiento">Mantenimiento</option>
+        </select>
+
+        <button class="create" onclick="createUser()">Crear usuario</button>
+
     </div>
+
 </div>
 
 <script>
@@ -103,41 +172,111 @@ const token = localStorage.getItem("token")
 const role = localStorage.getItem("role")
 const name = localStorage.getItem("name")
 
-// 🔒 Si no hay token → fuera
-if (!token) {
-    window.location.href = "/login"
-}
+let editingUserId = null
 
-// Mostrar info
-document.getElementById("welcome").innerText = "Bienvenido, " + name
-document.getElementById("role").innerText = "Rol: " + role
+if (!token) window.location.href = "/login"
 
-// Mostrar panel admin
-if (role === "admin") {
-    document.getElementById("adminPanel").style.display = "block"
-}
+welcome.innerText = "Bienvenido, " + name
+role.innerText = "Rol: " + role
 
-// Logout
+if (role === "admin") adminPanel.style.display = "block"
+
+// LOGOUT
 function logout() {
-    const token = localStorage.getItem("token")
-
-    fetch('http://127.0.0.1:8000/api/logout', {
+    fetch('/api/logout', {
         method: 'POST',
-        headers: {
-            'Authorization': 'Bearer ' + token
-        }
+        headers: { 'Authorization': 'Bearer ' + token }
+    }).then(() => {
+        localStorage.clear()
+        window.location.href = "/login"
+    })
+}
+
+// GET USERS
+function getUsers() {
+    fetch('/api/users', {
+        headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(res => res.json())
     .then(data => {
-        console.log(data)
-
-        // 🧹 limpiar sesión
-        localStorage.clear()
-
-        // 🔁 volver al login
-        window.location.href = "/login"
+        usersList.innerHTML = data.map(user => `
+            <div class="user-card">
+                ${user.name} (${user.role})
+                <div class="actions">
+                    <button class="edit" onclick="editUser(${user.id}, '${user.name}', '${user.email}', '${user.role}')">✏️</button>
+                    <button class="delete" onclick="deleteUser(${user.id})">❌</button>
+                </div>
+            </div>
+        `).join('')
     })
-    .catch(err => console.error(err));
+}
+
+// CREATE
+function createUser() {
+    fetch('/api/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+            name: newName.value,
+            email: newEmail.value,
+            password: newPassword.value,
+            role: newRole.value
+        })
+    }).then(() => {
+        alert("Usuario creado 🔥")
+        getUsers()
+    })
+}
+
+// DELETE
+function deleteUser(id) {
+    fetch(`/api/users/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+    }).then(() => {
+        alert("Usuario eliminado 💀")
+        getUsers()
+    })
+}
+
+// EDIT
+function editUser(id, name, email, role) {
+    editingUserId = id
+
+    editName.value = name
+    editEmail.value = email
+    editRole.value = role
+
+    editBox.style.display = "block"
+}
+
+// SAVE EDIT
+function saveEdit() {
+    fetch(`/api/users/${editingUserId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+            name: editName.value,
+            email: editEmail.value,
+            role: editRole.value
+        })
+    })
+    .then(() => {
+        alert("Usuario actualizado ✨")
+        editBox.style.display = "none"
+        getUsers()
+    })
+}
+
+// CANCEL
+function cancelEdit() {
+    editBox.style.display = "none"
 }
 </script>
 
