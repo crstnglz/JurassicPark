@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -34,5 +36,40 @@ class AuthController extends Controller
         {
             return response()->json("Unauthorised", 204);
         }
+    }
+
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:50',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                "success" => false,
+                "errors" => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+
+        $token = $user->createToken('LaravelSanctumAuth')->plainTextToken;
+
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "token" => $token
+            ],
+            "message" => "User registered!"
+        ]);
     }
 }
