@@ -23,6 +23,7 @@ class AuthController extends Controller
             $success = [
                 'id' => $auth->id,
                 'name' => $auth->name,
+                'role' => $auth->role,
                 'token' => $tokenResult->plainTextToken
             ];
 
