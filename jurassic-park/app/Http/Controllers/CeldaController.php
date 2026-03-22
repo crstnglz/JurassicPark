@@ -122,4 +122,8 @@ class CeldaController extends Controller
             'message' => 'Celda eliminada correctamente'
         ], 200);
     }
+    public function count()
+    {
+        return response()->json(['total' => \App\Models\Celda::count()]);
+    }
 }

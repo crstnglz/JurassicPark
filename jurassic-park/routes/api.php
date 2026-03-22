@@ -21,6 +21,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //CRUD USER
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users/count', [UserController::class, 'count']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::put('/users/{id}', [UserController::class, 'update']);
 
@@ -30,6 +31,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //CRUD CELDAS
     Route::get('/celdas', [CeldaController::class, 'index']);
     Route::post('/celdas', [CeldaController::class, 'store']);
+    Route::get('/celdas/count', [CeldaController::class, 'count']);
     Route::get('/celdas/{id}', [CeldaController::class, 'show']);
     Route::put('/celdas/{id}', [CeldaController::class, 'update']);
     Route::delete('/celdas/{id}', [CeldaController::class, 'destroy']);
@@ -37,6 +39,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //CRUD DINO
     Route::get('/dinosaurios', [DinosaurioController::class, 'index']);
     Route::post('/dinosaurios', [DinosaurioController::class, 'store']);
+    Route::get('/dinosaurios/count', [DinosaurioController::class, 'count']);
     Route::get('/dinosaurios/{id}', [DinosaurioController::class, 'show']);
     Route::put('/dinosaurios/{id}', [DinosaurioController::class, 'update']);
     Route::delete('/dinosaurios/{id}', [DinosaurioController::class, 'destroy']);

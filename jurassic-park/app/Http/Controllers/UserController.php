@@ -88,4 +88,9 @@ class UserController extends Controller
             "user" => $user
         ]);
     }
+
+    public function count()
+    {
+        return response()->json(['total' => \App\Models\User::count()]);
+    }
 }

@@ -166,4 +166,9 @@ class DinosaurioController extends Controller
             'data' => $dinosaurio->load('celda')
         ], 200);
     }
+
+    public function count()
+    {
+        return response()->json(['total' => \App\Models\Dinosaurio::count()]);
+    }
 }
