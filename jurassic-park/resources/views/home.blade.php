@@ -208,6 +208,11 @@
                 <div class="nav-title">Gestionar Tareas</div>
                 <div class="nav-desc">Asignar tareas a veterinarios y mantenimiento</div>
             </div>
+            <div class="nav-card" onclick="window.location.href='/simulacion'">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-title">Simulación Normal</div>
+                <div class="nav-desc">Simular funcionamiento del parque</div>
+            </div>
         </div>
     </div>
 

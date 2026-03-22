@@ -37,3 +37,7 @@ Route::get('/tareas', function() {
 Route::get('/mis-tareas', function() {
     return view('mis-tareas');
 });
+
+Route::get('/simulacion', function() {
+    return view('simulacion');
+});
