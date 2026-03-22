@@ -3,6 +3,7 @@
 use App\Http\Controllers\CeldaController;
 use App\Http\Controllers\CloudinaryController;
 use App\Http\Controllers\DinosaurioController;
+use App\Http\Controllers\SimulacionController;
 use App\Http\Controllers\TareaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/tareas', [TareaController::class, 'store']);
     Route::put('/tareas/{id}/estado', [TareaController::class, 'cambiarEstado']);
     Route::delete('/tareas/{id}', [TareaController::class, 'destroy']);
+
+    //SIMULACIONES
+    Route::post('/simulacion/normal', [SimulacionController::class, 'simularNormal']);
 });
 
 
