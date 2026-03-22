@@ -32,7 +32,7 @@ class TareaController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
-            'celda_it' => 'required|exists:celdas, id',
+            'celda_id' => 'required|exists:celdas,id',
             'tipo' => 'required|in:veterinario,mantenimiento',
             'descripcion' => 'nullable|string|max:255'
         ], [
@@ -69,7 +69,7 @@ class TareaController extends Controller
     //UPDATE TAREAS (ID) - ESTADO
     public function cambiarEstado(Request $request, $id)
     {
-        $tarea = Tare::find($id);
+        $tarea = Tarea::find($id);
 
         if(!$tarea)
         {
