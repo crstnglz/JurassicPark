@@ -29,3 +29,11 @@ Route::get('/celdas', function(){
 Route::get('/dinosaurios', function(){
     return view('dinosaurios');
 });
+
+Route::get('/tareas', function() {
+    return view ('tareas');
+});
+
+Route::get('/mis-tareas', function() {
+    return view('mis-tareas');
+});

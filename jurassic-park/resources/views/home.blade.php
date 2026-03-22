@@ -3,13 +3,13 @@
 <head>
     <title>Jurassic Park</title>
     <style>
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #052e16, #020617);
             color: #e5e7eb;
         }
-
         .navbar {
             background: rgba(0,0,0,0.7);
             padding: 15px 30px;
@@ -18,47 +18,13 @@
             align-items: center;
             border-bottom: 2px solid #22c55e;
         }
-
         .logo { color: #facc15; font-weight: bold; font-size: 18px; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid #22c55e; }
+        .btn-profile { background: #22c55e; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-logout  { background: #dc2626; padding: 6px 12px; border-radius: 6px; border: none; color: white; cursor: pointer; font-weight: bold; }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #22c55e;
-        }
-
-        .btn-profile {
-            background: #22c55e;
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-logout {
-            background: #dc2626;
-            padding: 6px 12px;
-            border-radius: 6px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .container {
-            padding: 40px;
-            max-width: 1100px;
-            margin: auto;
-        }
+        .container { padding: 40px; max-width: 1100px; margin: auto; }
 
         /* BIENVENIDA */
         .welcome-card {
@@ -71,17 +37,8 @@
             align-items: center;
             margin-bottom: 30px;
         }
-
         .welcome-card h2 { margin: 0; color: #facc15; }
-
-        .role-badge {
-            background: #064e3b;
-            color: #86efac;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        .role-badge { background: #064e3b; color: #86efac; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; }
 
         /* STATS */
         .stats-grid {
@@ -90,42 +47,19 @@
             gap: 15px;
             margin-bottom: 30px;
         }
+        .stat-card { background: rgba(0,0,0,0.6); border: 1px solid #14532d; border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-card .stat-number { font-size: 36px; font-weight: bold; color: #22c55e; }
+        .stat-card .stat-label  { font-size: 13px; color: #6b7280; margin-top: 4px; }
+        .stat-card .stat-icon   { font-size: 28px; margin-bottom: 8px; }
 
-        .stat-card {
-            background: rgba(0,0,0,0.6);
-            border: 1px solid #14532d;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-card .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #22c55e;
-        }
-
-        .stat-card .stat-label {
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        .stat-card .stat-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        /* ACCESO RÁPIDO */
+        /* NAV CARDS */
         h3 { color: #facc15; margin-bottom: 15px; }
-
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
-
         .nav-card {
             background: rgba(0,0,0,0.6);
             border: 1px solid #22c55e;
@@ -135,33 +69,14 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-
-        .nav-card:hover {
-            background: rgba(34,197,94,0.1);
-            border-color: #facc15;
-            transform: translateY(-3px);
-        }
-
-        .nav-card .nav-icon { font-size: 40px; margin-bottom: 10px; }
+        .nav-card:hover { background: rgba(34,197,94,0.1); border-color: #facc15; transform: translateY(-3px); }
+        .nav-card .nav-icon  { font-size: 40px; margin-bottom: 10px; }
         .nav-card .nav-title { font-size: 16px; font-weight: bold; color: #facc15; }
         .nav-card .nav-desc  { font-size: 12px; color: #6b7280; margin-top: 5px; }
 
         /* PANEL USUARIOS */
-        .section {
-            background: rgba(0,0,0,0.6);
-            border: 1px solid #14532d;
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
+        .section { background: rgba(0,0,0,0.6); border: 1px solid #14532d; border-radius: 16px; padding: 25px; margin-bottom: 30px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .section-header h3 { margin: 0; }
 
         .btn-green  { background: #22c55e; color: black; border: none; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; }
@@ -179,23 +94,14 @@
             align-items: center;
             border-radius: 8px;
         }
-
         .user-info { display: flex; flex-direction: column; gap: 3px; }
-        .user-name { font-weight: bold; color: white; }
+        .user-name  { font-weight: bold; color: white; }
         .user-email { font-size: 12px; color: #6b7280; }
-        .user-role {
-            font-size: 11px;
-            background: #064e3b;
-            color: #86efac;
-            padding: 2px 8px;
-            border-radius: 10px;
-            display: inline-block;
-        }
+        .user-role  { font-size: 11px; background: #064e3b; color: #86efac; padding: 2px 8px; border-radius: 10px; display: inline-block; }
 
         .actions { display: flex; gap: 6px; }
         .actions button { padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer; }
 
-        /* FORM */
         .edit-box {
             background: rgba(0,0,0,0.5);
             border: 1px solid #facc15;
@@ -213,18 +119,28 @@
             border: 1px solid #14532d;
             color: white;
             border-radius: 8px;
-            box-sizing: border-box;
         }
-
         label { font-size: 13px; color: #86efac; display: block; margin-top: 10px; }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
         .empty { text-align: center; color: #6b7280; padding: 20px; }
+
+        /* WORKER PANEL */
+        .worker-card {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #22c55e;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .worker-card:hover { background: rgba(34,197,94,0.1); border-color: #facc15; transform: translateY(-3px); }
+        .worker-card .nav-icon  { font-size: 60px; margin-bottom: 15px; }
+        .worker-card .nav-title { font-size: 22px; font-weight: bold; color: #facc15; }
+        .worker-card .nav-desc  { font-size: 14px; color: #6b7280; margin-top: 8px; }
     </style>
 </head>
 
@@ -265,10 +181,15 @@
                 <div class="stat-number" id="statDinos">-</div>
                 <div class="stat-label">Dinosaurios</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-number" id="statTareas">-</div>
+                <div class="stat-label">Tareas activas</div>
+            </div>
         </div>
     </div>
 
-    <!-- ACCESO RÁPIDO (solo admin) -->
+    <!-- ACCESO RÁPIDO ADMIN -->
     <div id="navPanel" style="display:none">
         <h3>⚡ Acceso Rápido</h3>
         <div class="nav-grid">
@@ -282,6 +203,11 @@
                 <div class="nav-title">Gestionar Dinosaurios</div>
                 <div class="nav-desc">Registrar y asignar dinosaurios a celdas</div>
             </div>
+            <div class="nav-card" onclick="window.location.href='/tareas'">
+                <div class="nav-icon">📋</div>
+                <div class="nav-title">Gestionar Tareas</div>
+                <div class="nav-desc">Asignar tareas a veterinarios y mantenimiento</div>
+            </div>
         </div>
     </div>
 
@@ -293,10 +219,8 @@
                 <h3>👥 Usuarios</h3>
                 <button class="btn-green" onclick="getUsers()">🔄 Cargar</button>
             </div>
-
             <div id="usersList"><div class="empty">Pulsa cargar para ver los usuarios</div></div>
 
-            <!-- EDITAR -->
             <div class="edit-box" id="editBox">
                 <h3 style="color:#facc15; margin:0 0 15px 0">✏️ Editar usuario</h3>
                 <div class="form-row">
@@ -322,7 +246,6 @@
             </div>
         </div>
 
-        <!-- CREAR USUARIO -->
         <div class="section">
             <h3>➕ Crear Usuario</h3>
             <div class="form-row">
@@ -354,19 +277,28 @@
 
     </div>
 
+    <!-- PANEL TRABAJADOR -->
+    <div id="workerPanel" style="display:none">
+        <div class="worker-card" onclick="window.location.href='/mis-tareas'">
+            <div class="nav-icon">📋</div>
+            <div class="nav-title">Mis Tareas</div>
+            <div class="nav-desc">Ver y gestionar tus tareas asignadas</div>
+        </div>
+    </div>
+
 </div>
 
 <script>
-const token  = localStorage.getItem("token")
-const role   = localStorage.getItem("role")
-const name   = localStorage.getItem("name")
-const image  = localStorage.getItem("image")
+const token = localStorage.getItem("token")
+const role  = localStorage.getItem("role")
+const name  = localStorage.getItem("name")
+const image = localStorage.getItem("image")
 
 let editingUserId = null
 
 if (!token) window.location.href = "/login"
 
-document.getElementById("welcome").innerText  = "Bienvenido, " + name
+document.getElementById("welcome").innerText   = "Bienvenido, " + name
 document.getElementById("roleBadge").innerText = "Rol: " + role
 
 if (image) document.getElementById("navAvatar").src = image
@@ -376,18 +308,24 @@ if (role === "admin") {
     document.getElementById("statsPanel").style.display = "block"
     document.getElementById("navPanel").style.display   = "block"
     loadStats()
+} else {
+    document.getElementById("workerPanel").style.display = "block"
 }
 
 // ======== STATS ========
 function loadStats() {
-    fetch('/api/users', { headers: { 'Authorization': 'Bearer ' + token } })
+    fetch('/api/users',       { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statUsuarios").innerText = d.length)
 
-    fetch('/api/celdas', { headers: { 'Authorization': 'Bearer ' + token } })
+    fetch('/api/celdas',      { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statCeldas").innerText = d.length)
 
     fetch('/api/dinosaurios', { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statDinos").innerText = d.length)
+
+    fetch('/api/tareas',      { headers: { 'Authorization': 'Bearer ' + token } })
+        .then(r => r.json()).then(d => document.getElementById("statTareas").innerText =
+            d.filter(t => t.estado !== 'completada').length)
 }
 
 // ======== USUARIOS ========
