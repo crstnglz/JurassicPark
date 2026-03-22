@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,18 +24,22 @@ class AuthController extends Controller
                 'id' => $auth->id,
                 'name' => $auth->name,
                 'role' => $auth->role,
+                'image' => $auth->image,
                 'token' => $tokenResult->plainTextToken
             ];
 
             return response()->json([
                 "success" => true,
                 "data" => $success,
-                "messagee" => "User logged-in!"
+                "message" => "User logged-in!"
             ]);
         }
         else
         {
-            return response()->json("Unauthorised", 204);
+            return response()->json([
+                "success" => false,
+                "message" => "Unauthorised"
+            ], 401);
         }
     }
 
@@ -60,7 +64,7 @@ class AuthController extends Controller
         {
             return response()->json([
                 "success" => false,
-                "message" => "No puedes registrate como admin"
+                "message" => "No puedes registrarte como admin"
             ], 403);
         }
 
@@ -68,7 +72,8 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'role' => $request->role
+            'role' => $request->role,
+            'image' => null
         ]);
 
         $token = $user->createToken('LaravelSanctumAuth')->plainTextToken;
@@ -78,6 +83,8 @@ class AuthController extends Controller
             "data" => [
                 "id" => $user->id,
                 "name" => $user->name,
+                "role" => $user->role,
+                "image" => $user->image,
                 "token" => $token
             ],
             "message" => "User registered!"

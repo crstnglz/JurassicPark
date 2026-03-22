@@ -76,17 +76,31 @@ function login() {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-            email: email.value,
-            password: password.value
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value
         })
     })
     .then(res => res.json())
     .then(data => {
-        localStorage.setItem("token", data.data.token)
-        localStorage.setItem("name", data.data.name)
-        localStorage.setItem("role", data.data.role)
+        console.log(data)
 
-        window.location.href = "/home"
+        if(data.success)
+        {
+            localStorage.setItem("token", data.data.token)
+            localStorage.setItem("name", data.data.name)
+            localStorage.setItem("role", data.data.role)
+            localStorage.setItem("image", data.data.image)
+
+            window.location.href = "/home"
+        }
+        else
+        {
+            alert(data.message || "Error al hacer login")
+        }
+    })
+    .catch(err => {
+        console.error(err)
+        alert("Error de conexión con el servidor")
     })
 }
 

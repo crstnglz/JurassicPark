@@ -94,6 +94,7 @@ function register() {
         localStorage.setItem("token", data.data.token)
         localStorage.setItem("name", data.data.name)
         localStorage.setItem("role", data.data.role)
+        localStorage.setItem("image", data.data.image)
 
         window.location.href = "/home"
     })

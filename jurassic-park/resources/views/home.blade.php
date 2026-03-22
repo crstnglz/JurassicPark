@@ -16,6 +16,7 @@
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border-bottom: 2px solid #22c55e;
         }
 
@@ -24,9 +25,31 @@
             font-weight: bold;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #22c55e;
+        }
+
+        .profile-btn {
+            background: #22c55e;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+        }
+
         .logout {
             background: #dc2626;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             border: none;
             color: white;
@@ -115,7 +138,13 @@
 
 <div class="navbar">
     <div class="logo">🦖 Jurassic Park</div>
-    <button class="logout" onclick="logout()">Logout</button>
+
+    <div class="nav-right">
+        <img id="navAvatar" class="avatar" src="https://dummyimage.com/35x35/000/fff">
+
+        <button class="profile-btn" onclick="goProfile()">Perfil</button>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
 </div>
 
 <div class="container">
@@ -132,12 +161,12 @@
 
         <div id="usersList"></div>
 
-        <!-- 🔥 EDIT BOX -->
+        <!-- EDIT -->
         <div class="edit-box" id="editBox">
             <h3>✏️ Editar usuario</h3>
 
-            <input id="editName" placeholder="Nombre">
-            <input id="editEmail" placeholder="Email">
+            <input id="editName">
+            <input id="editEmail">
 
             <select id="editRole">
                 <option value="admin">Admin</option>
@@ -151,9 +180,9 @@
 
         <h3>➕ Crear usuario</h3>
 
-        <input id="newName" placeholder="Nombre">
-        <input id="newEmail" placeholder="Email">
-        <input id="newPassword" placeholder="Password">
+        <input id="newName">
+        <input id="newEmail">
+        <input id="newPassword">
 
         <select id="newRole">
             <option value="admin">Admin</option>
@@ -171,6 +200,7 @@
 const token = localStorage.getItem("token")
 const role = localStorage.getItem("role")
 const name = localStorage.getItem("name")
+const avatar = localStorage.getItem("avatar")
 
 let editingUserId = null
 
@@ -179,7 +209,15 @@ if (!token) window.location.href = "/login"
 welcome.innerText = "Bienvenido, " + name
 role.innerText = "Rol: " + role
 
+if (avatar) {
+    document.getElementById("navAvatar").src = avatar
+}
+
 if (role === "admin") adminPanel.style.display = "block"
+
+function goProfile() {
+    window.location.href = "/profile"
+}
 
 // LOGOUT
 function logout() {
@@ -225,10 +263,7 @@ function createUser() {
             password: newPassword.value,
             role: newRole.value
         })
-    }).then(() => {
-        alert("Usuario creado 🔥")
-        getUsers()
-    })
+    }).then(() => getUsers())
 }
 
 // DELETE
@@ -236,10 +271,7 @@ function deleteUser(id) {
     fetch(`/api/users/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
-    }).then(() => {
-        alert("Usuario eliminado 💀")
-        getUsers()
-    })
+    }).then(() => getUsers())
 }
 
 // EDIT
@@ -253,7 +285,7 @@ function editUser(id, name, email, role) {
     editBox.style.display = "block"
 }
 
-// SAVE EDIT
+// SAVE
 function saveEdit() {
     fetch(`/api/users/${editingUserId}`, {
         method: 'PUT',
@@ -268,7 +300,6 @@ function saveEdit() {
         })
     })
     .then(() => {
-        alert("Usuario actualizado ✨")
         editBox.style.display = "none"
         getUsers()
     })

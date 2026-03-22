@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\CloudinaryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -20,4 +21,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/users', [UserController::class, 'store']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::put('/users/{id}', [UserController::class, 'update']);
+
+    Route::post('/subircloud', [CloudinaryController::class, 'subirImagenCloud']);
 });
