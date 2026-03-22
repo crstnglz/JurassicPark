@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CeldaController;
 use App\Http\Controllers\CloudinaryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,4 +25,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/subircloud', [CloudinaryController::class, 'subirImagenCloud']);
     Route::post('/update-password', [AuthController::class, 'updatePassword']);
+
+    //CRUD CELDAS
+    Route::get('/celdas', [CeldaController::class, 'inder']);
+    Route::post('/celdas', [CeldaController::class, 'store']);
+    Route::get('/celdas/{id}', [CeldaController::class, 'show']);
+    Route::put('/celdas/{id}', [CeldaController::class, 'update']);
+    Route::delete('/celdas/{id}', [CeldaController::class, 'destroy']);
 });
