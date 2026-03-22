@@ -54,6 +54,10 @@ class CloudinaryController extends Controller
             // Obtenemos la URL pública
             $url = Storage::disk('cloudinary')->url($uploadedFilePath);
 
+            $user = auth()->user();
+            $user->image = $url;
+            $user->save();
+
             return response()->json(['url' => $url], 200);
 
         } catch (\Exception $e) {

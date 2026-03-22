@@ -200,7 +200,7 @@
 const token = localStorage.getItem("token")
 const role = localStorage.getItem("role")
 const name = localStorage.getItem("name")
-const avatar = localStorage.getItem("avatar")
+const avatar = localStorage.getItem("image")
 
 let editingUserId = null
 

@@ -91,12 +91,21 @@ function register() {
     })
     .then(res => res.json())
     .then(data => {
+        if (!data.success)
+        {
+            alert(data.message || "Error al registrarse")
+            return
+        }
+
         localStorage.setItem("token", data.data.token)
         localStorage.setItem("name", data.data.name)
         localStorage.setItem("role", data.data.role)
-        localStorage.setItem("image", data.data.image)
-
+        localStorage.setItem("image", data.data.image ?? "")
         window.location.href = "/home"
+    })
+    .catch(err => {
+        console.error(err)
+        alert("Error de conexión con el servidor")
     })
 }
 
