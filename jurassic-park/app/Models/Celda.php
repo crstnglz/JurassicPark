@@ -15,8 +15,14 @@ class Celda extends Model
         'nivel_seguridad'
     ];
 
-    public function dinosauris()
+    public function dinosaurios()
     {
         return $this->hasMany(Dinosaurio::class);
+    }
+
+    //una celda tiene muchas tareas
+    public function tareas()
+    {
+        return $this->hasMany(Tarea::class);
     }
 }
