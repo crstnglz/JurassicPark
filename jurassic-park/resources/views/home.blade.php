@@ -164,6 +164,9 @@
         <h3>🏗️ Celdas</h3>
         <button class="load" onclick="window.location.href='/celdas'">🏗️ Gestionar Celdas</button>
 
+        <h3>🦖 Dinosaurios</h3>
+        <button class="load" onclick="window.location.href='/dinosaurios'">🦖 Gestionar Dinosaurios</button>
+
         <!-- EDIT -->
         <div class="edit-box" id="editBox">
             <h3>✏️ Editar usuario</h3>

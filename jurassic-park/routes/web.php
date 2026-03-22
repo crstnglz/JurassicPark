@@ -25,3 +25,7 @@ Route::get('/profile', function(){
 Route::get('/celdas', function(){
     return view('celdas');
 });
+
+Route::get('/dinosaurios', function(){
+    return view('dinosaurios');
+});
