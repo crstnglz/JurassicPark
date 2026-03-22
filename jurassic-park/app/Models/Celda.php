@@ -14,4 +14,9 @@ class Celda extends Model
         'averias_pendientes',
         'nivel_seguridad'
     ];
+
+    public function dinosauris()
+    {
+        return $this->hasMany(Dinosaurio::class);
+    }
 }
