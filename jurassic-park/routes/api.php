@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CeldaController;
 use App\Http\Controllers\CloudinaryController;
+use App\Http\Controllers\DinosaurioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -32,4 +33,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/celdas/{id}', [CeldaController::class, 'show']);
     Route::put('/celdas/{id}', [CeldaController::class, 'update']);
     Route::delete('/celdas/{id}', [CeldaController::class, 'destroy']);
+
+    //CRUD DINO
+    Route::get('/dinosaurios', [DinosaurioController::class, 'index']);
+    Route::post('/dinosaurios', [DinosaurioController::class, 'store']);
+    Route::get('/dinosaurios/{id}', [DinosaurioController::class, 'show']);
+    Route::put('/dinosaurios/{id}', [DinosaurioController::class, 'update']);
+    Route::delete('/dinosaurios/{id}', [DinosaurioController::class, 'destroy']);
+    Route::post('/dinosaurios/{id}/asignar', [DinosaurioController::class, 'asignar']);
 });
