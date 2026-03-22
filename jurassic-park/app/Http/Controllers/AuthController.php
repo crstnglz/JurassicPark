@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -88,6 +89,45 @@ class AuthController extends Controller
                 "token" => $token
             ],
             "message" => "User registered!"
+        ]);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ], [
+            'current_password.required' => 'La contraseña actual es obligatoria',
+            'new_password.required' => 'La nueva contraseña es obligatoria',
+            'new_password.min' => 'La nueva contraseña debe tener al menos 8 caracteres',
+            'new_password.confirmed' => 'Las contraseñas no coinciden'
+        ]);
+
+        if($validator->fails())
+        {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $user = auth()->user();
+
+        if(!Hash::check($request->current_password, $user->password))
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'La contraseña actual no es correcta'
+            ], 401);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Contraseña actualizada correctamente'
         ]);
     }
 

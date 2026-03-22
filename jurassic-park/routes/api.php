@@ -23,4 +23,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/users/{id}', [UserController::class, 'update']);
 
     Route::post('/subircloud', [CloudinaryController::class, 'subirImagenCloud']);
+    Route::post('/update-password', [AuthController::class, 'updatePassword']);
 });
