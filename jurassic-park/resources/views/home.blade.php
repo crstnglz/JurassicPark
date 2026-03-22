@@ -161,6 +161,9 @@
 
         <div id="usersList"></div>
 
+        <h3>🏗️ Celdas</h3>
+        <button class="load" onclick="window.location.href='/celdas'">🏗️ Gestionar Celdas</button>
+
         <!-- EDIT -->
         <div class="edit-box" id="editBox">
             <h3>✏️ Editar usuario</h3>

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->integer('cantidad_animales')->default(0);
             $table->enum('nivel_peligrosidad', ['bajo', 'medio', 'alto', 'muy_alto', 'extremo', 'critico'])->default('bajo');
+            $table->integer('averias_pendientes')->default(0);
             $table->integer('alimento')->default(0);
             $table->enum('nivel_seguridad', ['bajo', 'medio', 'alto'])->default('medio');
             $table->timestamps();

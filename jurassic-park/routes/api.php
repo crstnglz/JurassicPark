@@ -27,7 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/update-password', [AuthController::class, 'updatePassword']);
 
     //CRUD CELDAS
-    Route::get('/celdas', [CeldaController::class, 'inder']);
+    Route::get('/celdas', [CeldaController::class, 'index']);
     Route::post('/celdas', [CeldaController::class, 'store']);
     Route::get('/celdas/{id}', [CeldaController::class, 'show']);
     Route::put('/celdas/{id}', [CeldaController::class, 'update']);

@@ -21,3 +21,7 @@ Route::get('/register', function(){
 Route::get('/profile', function(){
     return view('profile');
 });
+
+Route::get('/celdas', function(){
+    return view('celdas');
+});
