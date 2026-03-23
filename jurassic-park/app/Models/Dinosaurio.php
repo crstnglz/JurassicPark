@@ -12,7 +12,8 @@ class Dinosaurio extends Model
         'edad',
         'nivel_peligrosidad',
         'dieta',
-        'celda_id'
+        'celda_id',
+        'estado'
     ];
 
     public function celda()
