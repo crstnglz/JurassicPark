@@ -26,7 +26,6 @@
 
         .container { padding: 40px; max-width: 1100px; margin: auto; }
 
-        /* BIENVENIDA */
         .welcome-card {
             background: rgba(0,0,0,0.6);
             padding: 25px 30px;
@@ -40,7 +39,6 @@
         .welcome-card h2 { margin: 0; color: #facc15; }
         .role-badge { background: #064e3b; color: #86efac; padding: 6px 14px; border-radius: 20px; font-size: 14px; font-weight: bold; }
 
-        /* STATS */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -52,7 +50,6 @@
         .stat-card .stat-label  { font-size: 13px; color: #6b7280; margin-top: 4px; }
         .stat-card .stat-icon   { font-size: 28px; margin-bottom: 8px; }
 
-        /* NAV CARDS */
         h3 { color: #facc15; margin-bottom: 15px; }
         .nav-grid {
             display: grid;
@@ -74,7 +71,6 @@
         .nav-card .nav-title { font-size: 16px; font-weight: bold; color: #facc15; }
         .nav-card .nav-desc  { font-size: 12px; color: #6b7280; margin-top: 5px; }
 
-        /* PANEL USUARIOS */
         .section { background: rgba(0,0,0,0.6); border: 1px solid #14532d; border-radius: 16px; padding: 25px; margin-bottom: 30px; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .section-header h3 { margin: 0; }
@@ -122,28 +118,9 @@
         }
         label { font-size: 13px; color: #86efac; display: block; margin-top: 10px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
         .empty { text-align: center; color: #6b7280; padding: 20px; }
-
-        /* WORKER PANEL */
-        .worker-card {
-            background: rgba(0,0,0,0.6);
-            border: 1px solid #22c55e;
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        .worker-card:hover { background: rgba(34,197,94,0.1); border-color: #facc15; transform: translateY(-3px); }
-        .worker-card .nav-icon  { font-size: 60px; margin-bottom: 15px; }
-        .worker-card .nav-title { font-size: 22px; font-weight: bold; color: #facc15; }
-        .worker-card .nav-desc  { font-size: 14px; color: #6b7280; margin-top: 8px; }
     </style>
 </head>
-
 <body>
 
 <div class="navbar">
@@ -157,13 +134,12 @@
 
 <div class="container">
 
-    <!-- BIENVENIDA -->
     <div class="welcome-card">
         <h2 id="welcome"></h2>
         <span class="role-badge" id="roleBadge"></span>
     </div>
 
-    <!-- STATS (solo admin) -->
+    <!-- STATS ADMIN -->
     <div id="statsPanel" style="display:none">
         <div class="stats-grid">
             <div class="stat-card">
@@ -223,7 +199,6 @@
 
     <!-- PANEL ADMIN USUARIOS -->
     <div id="adminPanel" style="display:none">
-
         <div class="section">
             <div class="section-header">
                 <h3>👥 Usuarios</h3>
@@ -284,54 +259,50 @@
             </div>
             <button class="btn-yellow" style="margin-top:15px" onclick="createUser()">➕ Crear usuario</button>
         </div>
-
     </div>
 
     <!-- PANEL TRABAJADOR -->
-<div id="workerPanel" style="display:none">
+    <div id="workerPanel" style="display:none">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-number" id="wStatPendiente">-</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔄</div>
+                <div class="stat-number" id="wStatProgreso">-</div>
+                <div class="stat-label">En progreso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number" id="wStatCompletada">-</div>
+                <div class="stat-label">Completadas</div>
+            </div>
+        </div>
 
-    <!-- STATS TRABAJADOR -->
-    <div class="stats-grid" id="workerStats">
-        <div class="stat-card">
-            <div class="stat-icon">⏳</div>
-            <div class="stat-number" id="wStatPendiente">-</div>
-            <div class="stat-label">Pendientes</div>
+        <div class="section">
+            <div class="section-header">
+                <h3>⏳ Tareas Pendientes</h3>
+                <button class="btn-green" onclick="window.location.href='/mis-tareas'">📋 Ver todas</button>
+            </div>
+            <div id="workerTareasList">
+                <div class="empty">Cargando tareas...</div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon">🔄</div>
-            <div class="stat-number" id="wStatProgreso">-</div>
-            <div class="stat-label">En progreso</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">✅</div>
-            <div class="stat-number" id="wStatCompletada">-</div>
-            <div class="stat-label">Completadas</div>
-        </div>
-    </div>
 
-    <!-- TAREAS PENDIENTES PREVIEW -->
-    <div class="section" id="workerTareasSection">
-        <div class="section-header">
-            <h3>⏳ Tareas Pendientes</h3>
-            <button class="btn-green" onclick="window.location.href='/mis-tareas'">📋 Ver todas</button>
-        </div>
-        <div id="workerTareasList">
-            <div class="empty">Cargando tareas...</div>
-        </div>
-    </div>
-
-    <!-- BOTÓN MIS TAREAS -->
-    <div class="nav-grid">
-        <div class="nav-card" onclick="window.location.href='/mis-tareas'">
-            <div class="nav-icon">📋</div>
-            <div class="nav-title">Mis Tareas</div>
-            <div class="nav-desc">Ver y gestionar todas tus tareas asignadas</div>
+        <div class="nav-grid">
+            <div class="nav-card" onclick="window.location.href='/mis-tareas'">
+                <div class="nav-icon">📋</div>
+                <div class="nav-title">Mis Tareas</div>
+                <div class="nav-desc">Ver y gestionar todas tus tareas asignadas</div>
+            </div>
         </div>
     </div>
 
 </div>
 
-</div>
+@include('partials.toast')
 
 <script>
 const token = localStorage.getItem("token")
@@ -358,25 +329,20 @@ if (role === "admin") {
     loadWorkerTareas()
 }
 
-// ======== TAREAS TRABAJADOR ========
 function loadWorkerTareas() {
     fetch('/api/tareas', { headers: { 'Authorization': 'Bearer ' + token } })
     .then(res => res.json())
     .then(tareas => {
-        // Stats
         document.getElementById("wStatPendiente").innerText  = tareas.filter(t => t.estado === 'pendiente').length
         document.getElementById("wStatProgreso").innerText   = tareas.filter(t => t.estado === 'en_progreso').length
         document.getElementById("wStatCompletada").innerText = tareas.filter(t => t.estado === 'completada').length
 
-        // Preview solo pendientes y en progreso
         const activas = tareas.filter(t => t.estado !== 'completada')
-
         if (!activas.length) {
             document.getElementById("workerTareasList").innerHTML =
                 '<div class="empty">✅ No tienes tareas pendientes</div>'
             return
         }
-
         document.getElementById("workerTareasList").innerHTML = activas.map(t => `
             <div class="user-card">
                 <div class="user-info">
@@ -397,23 +363,18 @@ function loadWorkerTareas() {
     })
 }
 
-// ======== STATS ========
 function loadStats() {
     fetch('/api/users',       { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statUsuarios").innerText = d.length)
-
     fetch('/api/celdas',      { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statCeldas").innerText = d.length)
-
     fetch('/api/dinosaurios', { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statDinos").innerText = d.length)
-
     fetch('/api/tareas',      { headers: { 'Authorization': 'Bearer ' + token } })
         .then(r => r.json()).then(d => document.getElementById("statTareas").innerText =
             d.filter(t => t.estado !== 'completada').length)
 }
 
-// ======== USUARIOS ========
 function getUsers() {
     fetch('/api/users', { headers: { 'Authorization': 'Bearer ' + token } })
     .then(res => res.json())
@@ -478,9 +439,7 @@ function saveEdit() {
 }
 
 function cancelEdit() { editBox.style.display = "none" }
-
-// ======== NAV ========
-function goProfile() { window.location.href = "/profile" }
+function goProfile()  { window.location.href = "/profile" }
 
 function logout() {
     fetch('/api/logout', {
@@ -489,6 +448,5 @@ function logout() {
     }).then(() => { localStorage.clear(); window.location.href = "/login" })
 }
 </script>
-
 </body>
 </html>
