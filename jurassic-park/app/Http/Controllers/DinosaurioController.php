@@ -24,7 +24,8 @@ class DinosaurioController extends Controller
             'edad' => 'required|integer|min:0',
             'nivel_peligrosidad' => 'required|in:bajo,medio,alto,muy_alto,extremo,critico',
             'dieta' => 'required|in:herbivoro,omnivoro,carnivoro',
-            'celda_id' => 'nullable|exists:celdas, id'
+            'celda_id' => 'nullable|exists:celdas,id',
+            'estado' => 'in:activo,fugado,herido'
         ], [
             'nick.required' => 'El nick es obligatorio',
             'raza.required' => 'La raza es obligatoria',
@@ -86,7 +87,8 @@ class DinosaurioController extends Controller
             'edad' => 'integer|min:0',
             'nivel_peligrosidad' => 'in:bajo,medio,alto,muy_alto,extremo,critico',
             'dieta' => 'in:herbivoro,omnivoro,carnivoro',
-            'celda_id' => 'nullable|exists:celdas,id'
+            'celda_id' => 'nullable|exists:celdas,id',
+            'estado' => 'in:activo,fugado,herido'
         ]);
 
         if($validator->fails())
@@ -170,5 +172,36 @@ class DinosaurioController extends Controller
     public function count()
     {
         return response()->json(['total' => \App\Models\Dinosaurio::count()]);
+    }
+
+        //recuperar dino
+    public function recuperar($id)
+    {
+        $dinosaurio = Dinosaurio::find($id);
+
+        if(!$dinosaurio)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dinosaurio no encontrado'
+            ], 404);
+        }
+
+        if($dinosaurio->estado === 'activo')
+        {
+            return response()->json([
+                'success' => false,
+                'message' => 'El dinosaurio ya está activo'
+            ], 400);
+        }
+
+        $dinosaurio->estado = 'activo';
+        $dinosaurio->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Dinosaurio recuperado correctamente',
+            'data' => $dinosaurio
+        ], 200);
     }
 }

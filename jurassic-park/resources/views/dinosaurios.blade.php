@@ -34,7 +34,6 @@
             margin-bottom: 25px;
         }
         .page-header h2 { margin: 0; color: #facc15; }
-
         .btn-create { background: #22c55e; color: black; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; }
 
         .grid {
@@ -50,7 +49,9 @@
             padding: 20px;
             transition: all 0.2s;
         }
-        .dino-card:hover { border-color: #facc15; background: rgba(0,0,0,0.8); }
+        .dino-card:hover   { border-color: #facc15; background: rgba(0,0,0,0.8); }
+        .dino-card.fugado  { border-color: #dc2626; opacity: 0.85; }
+        .dino-card.herido  { border-color: #facc15; opacity: 0.85; }
         .dino-card h4 { color: #facc15; margin: 0 0 12px 0; font-size: 16px; }
 
         .badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 12px; margin: 2px 0; }
@@ -63,17 +64,21 @@
         .badge-herbivoro { background: #14532d; color: #86efac; }
         .badge-omnivoro  { background: #713f12; color: #fde68a; }
         .badge-carnivoro { background: #7f1d1d; color: #fca5a5; }
+        .badge-activo    { background: #14532d; color: #86efac; }
+        .badge-fugado    { background: #450a0a; color: #ff6b6b; }
+        .badge-herido    { background: #713f12; color: #fde68a; }
 
         .stat { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
         .stat span:last-child { color: #22c55e; font-weight: bold; }
 
-        .card-actions { display: flex; gap: 8px; margin-top: 14px; }
-        .btn-edit    { background: #facc15; color: black; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
-        .btn-delete  { background: #dc2626; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
-        .btn-asignar { background: #6366f1; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
+        .card-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+        .btn-edit      { background: #facc15; color: black; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
+        .btn-delete    { background: #dc2626; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
+        .btn-asignar   { background: #6366f1; color: white; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
+        .btn-recuperar { background: #22c55e; color: black; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; flex: 1; font-weight: bold; }
 
-        .celda-tag  { background: #064e3b; color: #86efac; padding: 3px 8px; border-radius: 10px; font-size: 12px; }
-        .sin-celda  { background: #1f2937; color: #6b7280; padding: 3px 8px; border-radius: 10px; font-size: 12px; }
+        .celda-tag { background: #064e3b; color: #86efac; padding: 3px 8px; border-radius: 10px; font-size: 12px; }
+        .sin-celda { background: #1f2937; color: #6b7280; padding: 3px 8px; border-radius: 10px; font-size: 12px; }
 
         .form-box {
             background: rgba(0,0,0,0.7);
@@ -83,9 +88,7 @@
             margin-top: 30px;
         }
         .form-box h3 { color: #facc15; margin: 0 0 20px 0; }
-
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
         label { font-size: 13px; color: #86efac; display: block; margin-top: 12px; margin-bottom: 4px; }
         input, select {
             width: 100%;
@@ -95,12 +98,19 @@
             color: white;
             border-radius: 8px;
         }
-
         .form-actions { display: flex; gap: 10px; margin-top: 20px; }
         .btn-save   { background: #22c55e; color: black; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-cancel { background: #6b7280; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
 
         .empty { text-align: center; color: #6b7280; padding: 60px; font-size: 16px; }
+
+        .filtros { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filtro-btn { border: none; padding: 7px 14px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: bold; opacity: 0.6; transition: opacity 0.2s; }
+        .filtro-btn.active { opacity: 1; }
+        .filtro-btn.todos  { background: #374151; color: white; }
+        .filtro-btn.activo { background: #14532d; color: #86efac; }
+        .filtro-btn.fugado { background: #450a0a; color: #ff6b6b; }
+        .filtro-btn.herido { background: #713f12; color: #fde68a; }
     </style>
 </head>
 <body>
@@ -119,6 +129,14 @@
     <div class="page-header">
         <h2>🦖 Gestión de Dinosaurios</h2>
         <button class="btn-create" onclick="showCreateForm()">➕ Nuevo Dinosaurio</button>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filtros">
+        <button class="filtro-btn todos active" onclick="filtrar('todos')">🦖 Todos</button>
+        <button class="filtro-btn activo" onclick="filtrar('activo')">✅ Activos</button>
+        <button class="filtro-btn fugado" onclick="filtrar('fugado')">🚨 Fugados</button>
+        <button class="filtro-btn herido" onclick="filtrar('herido')">🩸 Heridos</button>
     </div>
 
     <div class="grid" id="dinoGrid">
@@ -189,6 +207,13 @@
             </div>
         </div>
 
+        <label>Estado</label>
+        <select id="fEstado">
+            <option value="activo">✅ Activo</option>
+            <option value="fugado">🚨 Fugado</option>
+            <option value="herido">🩸 Herido</option>
+        </select>
+
         <label>Celda (opcional)</label>
         <select id="fCelda">
             <option value="">Sin celda</option>
@@ -229,11 +254,12 @@ if (image) document.getElementById("navAvatar").src = image
 
 let editingId   = null
 let asignandoId = null
+let todosDinos  = []
 
 function getDinos() {
     fetch('/api/dinosaurios', { headers: { 'Authorization': 'Bearer ' + token } })
     .then(res => res.json())
-    .then(data => renderDinos(data))
+    .then(data => { todosDinos = data; renderDinos(data) })
     .catch(err => console.error(err))
 }
 
@@ -244,7 +270,7 @@ function renderDinos(dinos) {
         return
     }
     grid.innerHTML = dinos.map(d => `
-        <div class="dino-card">
+        <div class="dino-card ${d.estado}">
             <h4>🦖 ${d.nick}</h4>
             <div class="stat"><span>🧬 Raza</span><span>${d.raza}</span></div>
             <div class="stat"><span>📅 Edad</span><span>${d.edad} años</span></div>
@@ -253,6 +279,9 @@ function renderDinos(dinos) {
             </span>
             <span class="badge badge-${d.dieta}">
                 ${d.dieta === 'herbivoro' ? '🌿' : d.dieta === 'omnivoro' ? '🍖' : '🔴'} ${d.dieta}
+            </span>
+            <span class="badge badge-${d.estado}">
+                ${d.estado === 'activo' ? '✅' : d.estado === 'fugado' ? '🚨' : '🩸'} ${d.estado}
             </span>
             <div class="stat" style="margin-top:8px">
                 <span>🏠 Celda</span>
@@ -265,11 +294,22 @@ function renderDinos(dinos) {
             </div>
             <div class="card-actions">
                 <button class="btn-edit" onclick="editDino(${d.id})">✏️</button>
-                <button class="btn-asignar" onclick="showAsignar(${d.id}, '${d.nick}', ${d.celda_id ?? 'null'})">🏠</button>
+                ${d.estado === 'activo' ? `
+                    <button class="btn-asignar" onclick="showAsignar(${d.id}, '${d.nick}', ${d.celda_id ?? 'null'})">🏠</button>
+                ` : `
+                    <button class="btn-recuperar" onclick="recuperarDino(${d.id}, '${d.nick}')">🔄</button>
+                `}
                 <button class="btn-delete" onclick="deleteDino(${d.id}, '${d.nick}')">❌</button>
             </div>
         </div>
     `).join('')
+}
+
+function filtrar(estado) {
+    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('active'))
+    document.querySelector(`.filtro-btn.${estado}`).classList.add('active')
+    if (estado === 'todos') renderDinos(todosDinos)
+    else renderDinos(todosDinos.filter(d => d.estado === estado))
 }
 
 function loadCeldas(selectId, selectedId = null) {
@@ -292,6 +332,7 @@ function showCreateForm() {
     document.getElementById("fRaza").value            = "Triceratops"
     document.getElementById("fPeligrosidad").value    = "bajo"
     document.getElementById("fDieta").value           = "herbivoro"
+    document.getElementById("fEstado").value          = "activo"
     loadCeldas("fCelda")
     document.getElementById("formBox").style.display  = "block"
     document.getElementById("formBox").scrollIntoView({ behavior: 'smooth' })
@@ -308,6 +349,7 @@ function editDino(id) {
         document.getElementById("fRaza").value            = d.raza
         document.getElementById("fPeligrosidad").value    = d.nivel_peligrosidad
         document.getElementById("fDieta").value           = d.dieta
+        document.getElementById("fEstado").value          = d.estado
         loadCeldas("fCelda", d.celda_id)
         document.getElementById("formBox").style.display  = "block"
         document.getElementById("formBox").scrollIntoView({ behavior: 'smooth' })
@@ -321,6 +363,7 @@ function saveForm() {
         raza:               document.getElementById("fRaza").value,
         nivel_peligrosidad: document.getElementById("fPeligrosidad").value,
         dieta:              document.getElementById("fDieta").value,
+        estado:             document.getElementById("fEstado").value,
         celda_id:           document.getElementById("fCelda").value || null,
     }
     const url    = editingId ? `/api/dinosaurios/${editingId}` : '/api/dinosaurios'
@@ -366,6 +409,19 @@ function saveAsignar() {
     .then(data => {
         if (data.success) { alert(data.message); hideAsignar(); getDinos() }
         else alert(data.message || "Error al asignar")
+    })
+}
+
+function recuperarDino(id, nick) {
+    if (!confirm(`¿Recuperar a "${nick}"?`)) return
+    fetch(`/api/dinosaurios/${id}/recuperar`, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) { alert(data.message); getDinos() }
+        else alert(data.message || "Error al recuperar")
     })
 }
 

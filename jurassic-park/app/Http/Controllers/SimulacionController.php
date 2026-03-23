@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Celda;
+use App\Models\Dinosaurio;
 use Illuminate\Http\Request;
 
 class SimulacionController extends Controller
@@ -179,14 +180,28 @@ class SimulacionController extends Controller
         {
             foreach($celda->dinosaurios as $dino)
             {
-                if($dino->dieta === 'carinovo' && in_array($dino->nivel_peligrosidad, ['muy_alto', 'extremo', 'critico']))
+                if($dino->dieta === 'carnivoro' && in_array($dino->nivel_peligrosidad, ['muy_alto', 'extremo', 'critico']))
                 {
                     $carnivorosLetales[] = $dino->nick . '(' . $dino->raza . ')';
+
+                    $dino->estado = 'fugado';
+                    $dino->celda_id = null;
+                    $dino->save();
 
                     if($dinosauriosAgresivos || $dino->nivel_peligrosidad === 'critico')
                     {
                         $bajasPersonal += rand(1, 3);
                         $dinosauriosHeridos += rand(0, 2);
+                    }
+                }
+
+                if($hayFuga && $dinosauriosAgresivos && $dino->dieta !== 'carnivoro')
+                {
+                    if(rand(1, 100) <= 40)
+                    {
+                        $dino->estado = 'herido';
+                        $dino->save();
+                        $dinosauriosHeridos++;
                     }
                 }
             }
@@ -227,7 +242,7 @@ class SimulacionController extends Controller
         if($hayFuga)
         {
             $celda->averias_pendientes += rand(1, 3);
-            $celda-> alimento = max(0, $celda->alimento - rand(10, 30));
+            $celda->alimento = max(0, $celda->alimento - rand(10, 30));
             $celda->save();
         }
 

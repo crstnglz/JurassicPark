@@ -56,6 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     //SIMULACIONES
     Route::post('/simulacion/normal', [SimulacionController::class, 'simularNormal']);
     Route::post('/simulacion/brecha', [SimulacionController::class, 'simularBrecha']);
+
+    Route::post('/dinosaurios/{id}/recuperar', [DinosaurioController::class, 'recuperar']);
 });
 
 
