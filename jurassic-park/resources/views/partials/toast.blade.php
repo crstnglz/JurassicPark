@@ -37,6 +37,7 @@ function showToast(mensaje, tipo = 'info', duracion = 5000) {
         gap: 10px;
         animation: slideIn 0.3s ease;
         cursor: pointer;
+        max-width: 350px;
     `
     toast.innerHTML = `
         <span style="font-size:18px">${c.icon}</span>
@@ -44,7 +45,6 @@ function showToast(mensaje, tipo = 'info', duracion = 5000) {
         <span style="opacity:0.6; font-size:18px; line-height:1" onclick="this.parentElement.remove()">×</span>
     `
     toast.addEventListener('click', () => toast.remove())
-
     document.getElementById('toastContainer').appendChild(toast)
 
     setTimeout(() => {
@@ -68,9 +68,9 @@ style.textContent = `
 document.head.appendChild(style)
 
 // ======== CONEXIÓN REVERB ========
-const _token = localStorage.getItem("token")
-const _role  = localStorage.getItem("role")
-const _userId = localStorage.getItem("id") // necesitamos guardar el id
+const _token  = localStorage.getItem("token")
+const _role   = localStorage.getItem("role")
+const _userId = localStorage.getItem("id")
 
 if (_token) {
     const pusher = new Pusher('{{ env("REVERB_APP_KEY") }}', {
@@ -108,22 +108,31 @@ if (_token) {
         })
     }
 
-    // ======== CANAL TRABAJADOR (veterinario/mantenimiento) ========
-    if (_role === 'veterinario' || _role === 'mantenimiento') {
-        const canalTrabajador = pusher.subscribe(`trabajador.${_userId}`)
+    // ======== CANAL TRABAJADOR ========
+    if ((_role === 'veterinario' || _role === 'mantenimiento') && _userId) {
+        console.log('🔌 Suscribiendo al canal trabajador.' + _userId)
+        const canalTrabajador = pusher.subscribe('trabajador.' + _userId)
+
+        canalTrabajador.bind('pusher:subscription_succeeded', () => {
+            console.log('✅ Suscrito correctamente al canal trabajador.' + _userId)
+        })
 
         // HU28 - Tarea asignada
         canalTrabajador.bind('tarea.asignada', (data) => {
+            console.log('📋 Tarea recibida:', data)
             showToast(
                 `📋 Nueva tarea asignada — <strong>${data.celda ? data.celda.nombre : 'Sin celda'}</strong> (${data.tipo})`,
                 'info',
                 7000
             )
+            // ✅ Recargar tareas automáticamente sin refrescar
+            if (typeof getTareas === 'function') getTareas()
+            if (typeof loadWorkerTareas === 'function') loadWorkerTareas()
         })
     }
 
     pusher.connection.bind('connected', () => {
-        console.info('✅ Conectado a Reverb')
+        console.info('✅ Conectado correctamente a Reverb')
     })
 
     pusher.connection.bind('error', (err) => {
