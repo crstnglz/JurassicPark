@@ -283,13 +283,48 @@
     </div>
 
     <!-- PANEL TRABAJADOR -->
-    <div id="workerPanel" style="display:none">
-        <div class="worker-card" onclick="window.location.href='/mis-tareas'">
-            <div class="nav-icon">📋</div>
-            <div class="nav-title">Mis Tareas</div>
-            <div class="nav-desc">Ver y gestionar tus tareas asignadas</div>
+<div id="workerPanel" style="display:none">
+
+    <!-- STATS TRABAJADOR -->
+    <div class="stats-grid" id="workerStats">
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-number" id="wStatPendiente">-</div>
+            <div class="stat-label">Pendientes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-number" id="wStatProgreso">-</div>
+            <div class="stat-label">En progreso</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number" id="wStatCompletada">-</div>
+            <div class="stat-label">Completadas</div>
         </div>
     </div>
+
+    <!-- TAREAS PENDIENTES PREVIEW -->
+    <div class="section" id="workerTareasSection">
+        <div class="section-header">
+            <h3>⏳ Tareas Pendientes</h3>
+            <button class="btn-green" onclick="window.location.href='/mis-tareas'">📋 Ver todas</button>
+        </div>
+        <div id="workerTareasList">
+            <div class="empty">Cargando tareas...</div>
+        </div>
+    </div>
+
+    <!-- BOTÓN MIS TAREAS -->
+    <div class="nav-grid">
+        <div class="nav-card" onclick="window.location.href='/mis-tareas'">
+            <div class="nav-icon">📋</div>
+            <div class="nav-title">Mis Tareas</div>
+            <div class="nav-desc">Ver y gestionar todas tus tareas asignadas</div>
+        </div>
+    </div>
+
+</div>
 
 </div>
 
@@ -315,6 +350,46 @@ if (role === "admin") {
     loadStats()
 } else {
     document.getElementById("workerPanel").style.display = "block"
+    loadWorkerTareas()
+}
+
+// ======== TAREAS TRABAJADOR ========
+function loadWorkerTareas() {
+    fetch('/api/tareas', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(res => res.json())
+    .then(tareas => {
+        // Stats
+        document.getElementById("wStatPendiente").innerText  = tareas.filter(t => t.estado === 'pendiente').length
+        document.getElementById("wStatProgreso").innerText   = tareas.filter(t => t.estado === 'en_progreso').length
+        document.getElementById("wStatCompletada").innerText = tareas.filter(t => t.estado === 'completada').length
+
+        // Preview solo pendientes y en progreso
+        const activas = tareas.filter(t => t.estado !== 'completada')
+
+        if (!activas.length) {
+            document.getElementById("workerTareasList").innerHTML =
+                '<div class="empty">✅ No tienes tareas pendientes</div>'
+            return
+        }
+
+        document.getElementById("workerTareasList").innerHTML = activas.map(t => `
+            <div class="user-card">
+                <div class="user-info">
+                    <span class="user-name">🏠 ${t.celda ? t.celda.nombre : 'Sin celda'}</span>
+                    <span class="user-email">
+                        ${t.tipo === 'veterinario' ? '🩺' : '🔧'} ${t.tipo}
+                        ${t.descripcion ? '— ' + t.descripcion : ''}
+                    </span>
+                    <span class="user-role" style="background:${t.estado === 'en_progreso' ? '#1e3a5f' : '#713f12'}; color:${t.estado === 'en_progreso' ? '#93c5fd' : '#fde68a'}">
+                        ${t.estado === 'pendiente' ? '⏳ pendiente' : '🔄 en progreso'}
+                    </span>
+                </div>
+                <div class="actions">
+                    <button class="btn-green" onclick="window.location.href='/mis-tareas'">Ver →</button>
+                </div>
+            </div>
+        `).join('')
+    })
 }
 
 // ======== STATS ========

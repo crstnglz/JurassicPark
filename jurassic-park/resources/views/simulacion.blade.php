@@ -339,11 +339,20 @@ function mostrarResultados(data) {
                 </span>
             </div>
 
-            <button class="btn-asignar" onclick="openModal(${c.id}, '${c.nombre}')">
-                👷 Asignar Trabajador
-            </button>
+            <div style="margin-top:10px">
+    <div style="font-size:13px; color:#86efac; margin-bottom:6px">👷 Trabajadores asignados:</div>
+    <div id="trabajadores-${c.id}">
+        <span style="color:#6b7280; font-size:13px">Cargando...</span>
+    </div>
+</div>
+<button class="btn-asignar" onclick="openModal(${c.id}, '${c.nombre}')">
+    👷 Asignar Trabajador
+</button>
         </div>
     `).join('')
+
+    // Cargar trabajadores asignados a cada celda
+informe.forEach(c => loadTareasCelda(c.id))
 
     document.getElementById("resumenPanel").scrollIntoView({ behavior: 'smooth' })
 }
@@ -394,11 +403,38 @@ function saveAsignar() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert(`✅ Trabajador asignado a la celda correctamente`)
             closeModal()
+            loadTareasCelda(celdaSeleccionada)
         } else {
             alert(data.message || "Error al asignar")
         }
+    })
+}
+
+// ======== CARGAR TRABAJADORES ASIGNADOS A UNA CELDA ========
+function loadTareasCelda(celdaId) {
+    fetch('/api/tareas', { headers: { 'Authorization': 'Bearer ' + token } })
+    .then(res => res.json())
+    .then(tareas => {
+        const tareasCelda = tareas.filter(t =>
+            t.celda_id == celdaId && t.estado !== 'completada'
+        )
+
+        const contenedor = document.getElementById(`trabajadores-${celdaId}`)
+        if (!contenedor) return
+
+        if (!tareasCelda.length) {
+            contenedor.innerHTML = '<span style="color:#6b7280; font-size:13px">Sin trabajadores asignados</span>'
+            return
+        }
+
+        contenedor.innerHTML = tareasCelda.map(t => `
+            <div style="display:flex; align-items:center; gap:6px; margin:4px 0; font-size:13px">
+                <span>${t.tipo === 'veterinario' ? '🩺' : '🔧'}</span>
+                <span style="color:#e5e7eb">${t.usuario ? t.usuario.name : '-'}</span>
+                <span style="color:#6b7280">(${t.estado.replace('_',' ')})</span>
+            </div>
+        `).join('')
     })
 }
 

@@ -105,6 +105,24 @@ class TareaController extends Controller
         $tarea->estado = $request->estado;
         $tarea->save();
 
+        //al completar se restaura según tipo tarea
+        if($request->estado === 'completada')
+        {
+            $celda = $tarea->celda;
+
+            if($tarea->tipo === 'veterinario')
+            {
+                $celda->alimento = 100;
+                $celda->save();
+            }
+
+            elseif($tarea->tipo === 'mantenimiento')
+            {
+                $celda->averias_pendientes = max(0, $celda->averias_pendientes - 1);
+                $celda->save();
+            }
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Estado actualizado correctamente',
