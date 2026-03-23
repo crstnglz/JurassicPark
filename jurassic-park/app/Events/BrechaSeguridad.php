@@ -45,7 +45,7 @@ class BrechaSeguridad implements ShouldBroadcast
             'celda' => $this->informe['celda']['nombre'],
             'resultado' => $this->informe['resultado'],
             'carnivoros_letales' => $this->informe['carnivoros_letales'],
-            'bajas_personal' => $this->informe['bajas_persona'],
+            'bajas_personal' => $this->informe['bajas_personal'],
             'eventos' => $this->informe['eventos']
         ];
     }
