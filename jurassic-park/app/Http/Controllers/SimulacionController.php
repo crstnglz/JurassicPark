@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BrechaSeguridad;
+use App\Events\CeldaActualizada;
 use App\Models\Celda;
 use App\Models\Dinosaurio;
 use Illuminate\Http\Request;
@@ -80,6 +82,8 @@ class SimulacionController extends Controller
             } elseif ($celda->alimento <= 50 || $celda->averias_pendientes >= 1) {
                 $alerta = 'atencion';
             }
+
+            event(new CeldaActualizada($celda));
 
             $informe[] = [
                 'id' => $celda->id,
@@ -245,6 +249,17 @@ class SimulacionController extends Controller
             $celda->alimento = max(0, $celda->alimento - rand(10, 30));
             $celda->save();
         }
+
+        event(new BrechaSeguridad($informeData = [
+            'celda' => [
+                'id' => $celda->id,
+                'nombre' => $celda->nombre
+            ],
+            'resultado' => $resultado,
+            'carnivoros_letales' => $carnivorosLetales,
+            'bajas_personal' => $bajasPersonal,
+            'eventos' => $eventos
+        ]));
 
         return response()->json([
             'success' => true,

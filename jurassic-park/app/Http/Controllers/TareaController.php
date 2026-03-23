@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TareaAsignada;
 use App\Models\Tarea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -58,6 +59,8 @@ class TareaController extends Controller
             'estado' => 'pendiente',
             'descripcion' => $request->descripcion
         ]);
+
+        event(new TareaAsignada(($tarea->load(['usuario', 'celda']))));
 
         return response()->json([
             'success' => true,
