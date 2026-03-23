@@ -30,9 +30,12 @@ class TareaActualizada implements ShouldBroadcast
      *
      * @return array<int, Channel>
      */
-    public function broadcastOn(): Channel
+    public function broadcastOn(): array
     {
-        return new Channel('trabajador.' . $this->tarea->user_id);
+        return [
+            new Channel('trabajador.' . $this->tarea->user_id),
+            new Channel('parque')
+        ];
     }
 
     public function broadcastAs(): string
