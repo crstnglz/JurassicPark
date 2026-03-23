@@ -36,7 +36,7 @@ class TareaEliminada implements ShouldBroadcast
         return new Channel('trabajador.' . $this->userId);
     }
 
-    public function broadcasAs(): string
+    public function broadcastAs(): string
     {
         return 'tarea.eliminada';
     }

@@ -155,7 +155,7 @@ class TareaController extends Controller
 
         $tarea->delete();
 
-        event(new TareaEliminada($tarea->id, $tarea->user_id));
+        event(new TareaEliminada($tareaId, $userId));
 
         return response()->json([
             'success' => true,
