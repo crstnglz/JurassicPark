@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TareaActualizada;
 use App\Events\TareaAsignada;
+use App\Events\TareaEliminada;
 use App\Models\Tarea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -126,6 +128,8 @@ class TareaController extends Controller
             }
         }
 
+        event(new TareaActualizada($tarea->load(['usuario', 'celda'])));
+
         return response()->json([
             'success' => true,
             'message' => 'Estado actualizado correctamente',
@@ -146,7 +150,12 @@ class TareaController extends Controller
             ], 404);
         }
 
+        $userId = $tarea->user_id;
+        $tareaId = $tarea->id;
+
         $tarea->delete();
+
+        event(new TareaEliminada($tarea->id, $tarea->user_id));
 
         return response()->json([
             'success' => true,
