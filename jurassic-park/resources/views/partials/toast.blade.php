@@ -95,6 +95,16 @@ if (_token) {
             )
         })
 
+        // Admin recibe actualización de tareas
+canalParque.bind('tarea.actualizada', (data) => {
+    showToast(
+        `🔄 <strong>${data.celda ? data.celda.nombre : 'Sin celda'}</strong> — Tarea ${data.estado.replace('_',' ')}`,
+        data.estado === 'completada' ? 'success' : 'info',
+        6000
+    )
+    if (typeof getTareas === 'function') getTareas()
+})
+
         // HU29 - Brecha de seguridad
         canalParque.bind('brecha.seguridad', (data) => {
             const tipo = data.resultado === 'catastrofe' ? 'danger' :
@@ -129,6 +139,30 @@ if (_token) {
             if (typeof getTareas === 'function') getTareas()
             if (typeof loadWorkerTareas === 'function') loadWorkerTareas()
         })
+
+        // HU28 - Tarea actualizada
+canalTrabajador.bind('tarea.actualizada', (data) => {
+    console.log('🔄 Tarea actualizada:', data)
+    showToast(
+        `🔄 Tarea actualizada — <strong>${data.celda ? data.celda.nombre : 'Sin celda'}</strong> estado: ${data.estado.replace('_',' ')}`,
+        data.estado === 'completada' ? 'success' : 'info',
+        7000
+    )
+    if (typeof getTareas === 'function') getTareas()
+    if (typeof loadWorkerTareas === 'function') loadWorkerTareas()
+})
+
+// HU28 - Tarea eliminada
+canalTrabajador.bind('tarea.eliminada', (data) => {
+    console.log('❌ Tarea eliminada:', data)
+    showToast(
+        `❌ Una tarea ha sido eliminada`,
+        'warning',
+        7000
+    )
+    if (typeof getTareas === 'function') getTareas()
+    if (typeof loadWorkerTareas === 'function') loadWorkerTareas()
+})
     }
 
     pusher.connection.bind('connected', () => {
