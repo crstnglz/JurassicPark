@@ -41,3 +41,7 @@ Route::get('/mis-tareas', function() {
 Route::get('/simulacion', function() {
     return view('simulacion');
 });
+
+Route::get('/simulacion-brecha', function(){
+    return view('simulacion-brecha');
+});

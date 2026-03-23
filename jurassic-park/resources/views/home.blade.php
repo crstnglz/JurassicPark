@@ -213,6 +213,11 @@
                 <div class="nav-title">Simulación Normal</div>
                 <div class="nav-desc">Simular funcionamiento del parque</div>
             </div>
+            <div class="nav-card" onclick="window.location.href='/simulacion-brecha'">
+                <div class="nav-icon">💥</div>
+                <div class="nav-title">Simulación Brecha</div>
+                <div class="nav-desc">Simular fallo de seguridad en una celda</div>
+            </div>
         </div>
     </div>
 
