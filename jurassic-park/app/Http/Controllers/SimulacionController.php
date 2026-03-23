@@ -111,4 +111,148 @@ class SimulacionController extends Controller
             'informe' => $informe
         ], 200);
     }
+
+    public function simularBrecha(Request $request)
+    {
+        if($request->celda_id)
+        {
+            $celda = Celda::with('dinosaurios')->find($request->celda_id);
+
+            if(!$celda)
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Celda no encontrada'
+                ], 404);
+            }
+        }
+        else
+        {
+            $celda = Celda::with('dinosaurios')->inRandomOrder()->first();
+            if(!$celda)
+            {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No hay celdas en el parque'
+                ], 400);
+            }
+        }
+
+        $eventos = [];
+
+        //nivel seguridad
+        $probabilidadFuga = match($celda->nivel_seguridad)
+        {
+            'bajo' => 80,
+            'medio' => 50,
+            'alto' => 20,
+            default => 50
+        };
+
+        //averías pendientes agravantes
+        $probabilidadFuga += $celda->averias_pendientes * 10;
+        $probabilidadFuga = min(100, $probabilidadFuga);
+
+        //falta comida aumenta agresividad
+        $dinosauriosAgresivos = false;
+        if($celda->alimento <= 20)
+        {
+            $dinosauriosAgresivos = true;
+            $probabilidadFuga += 15;
+            $probabilidadFuga = min(100, $probabilidadFuga);
+            $eventos[] = 'Falta crítica de alimento - dinosaurios muy agrsivos';
+        }
+        elseif($celda->alimento <= 50)
+        {
+            $eventos[] = 'Alimento bajo - dinosaurius nerviosos';
+        }
+
+        //calcular fuga
+        $hayFuga = rand(1, 100) <= $probabilidadFuga;
+
+        //dinosaurios carnivoros letales
+        $carnivorosLetales = [];
+        $bajasPersonal = 0;
+        $dinosauriosHeridos = 0;
+
+        if($hayFuga && $celda->dinosaurios->count() > 0)
+        {
+            foreach($celda->dinosaurios as $dino)
+            {
+                if($dino->dieta === 'carinovo' && in_array($dino->nivel_peligrosidad, ['muy_alto', 'extremo', 'critico']))
+                {
+                    $carnivorosLetales[] = $dino->nick . '(' . $dino->raza . ')';
+
+                    if($dinosauriosAgresivos || $dino->nivel_peligrosidad === 'critico')
+                    {
+                        $bajasPersonal += rand(1, 3);
+                        $dinosauriosHeridos += rand(0, 2);
+                    }
+                }
+            }
+
+            if(count($carnivorosLetales) > 0)
+            {
+                $eventos[] = 'Carnivoros letales escaparon: ' . implode(', ', $carnivorosLetales);
+            }
+
+            if($bajasPersonal > 0)
+            {
+                $eventos[] = '💀 ' . $bajasPersonal . ' miembro(s) del personl atacado(s)';
+            }
+
+            if($dinosauriosHeridos > 0)
+            {
+                $eventos[] = '🩸 ' . $dinosauriosHeridos . ' dinosaurio(s) herido(s) en el caos';
+            }
+        }
+
+        //resultado
+        if(!$hayFuga)
+        {
+            $resultado = 'contenida';
+            $eventos[] = 'la brecha fue contenida con éxito';
+        } elseif(count($carnivorosLetales) === 0)
+        {
+            $resultado = 'fuga_menor';
+            $eventos[] = 'Fuga menor - sin carnivoros letales sueltos';
+        }
+        else
+        {
+            $resultado = 'catastrofe';
+            $eventos[] = 'CATASTROFE - carnivoros letales sueltos en el parque';
+        }
+
+        //actualización de celdas
+        if($hayFuga)
+        {
+            $celda->averias_pendientes += rand(1, 3);
+            $celda-> alimento = max(0, $celda->alimento - rand(10, 30));
+            $celda->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Simulación de brecha completada',
+            'informe' => [
+                'celda' => [
+                    'id' => $celda->id,
+                    'nombre' => $celda->nombre,
+                    'nivel_seguridad' => $celda->nivel_seguridad,
+                    'nivel_peligrosidad' => $celda->nivel_peligrosidad,
+                    'alimento' => $celda->alimento,
+                    'averias_pendientes' => $celda->averias_pendientes
+                ],
+                'probabilidad_fuga' => $probabilidadFuga,
+                'hay_fuga' => $hayFuga,
+                'resultado' => $resultado,
+                'carnivoros_letales' => $carnivorosLetales,
+                'bajas_personal' => $bajasPersonal,
+                'dinosaurios_heridos' => $dinosauriosHeridos,
+                'dinosaurios_agresivos' => $dinosauriosAgresivos,
+                'total_dinosaurios' => $celda->dinosaurios->count(),
+                'eventos' => $eventos
+            ]
+        ], 200);
+    }
 }
